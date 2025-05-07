@@ -1,43 +1,44 @@
+---
 - name: Uninstall UFW
-    apt:
-      name: ufw
-      state: absent
-    when: ansible_os_family == "Debian"
+  apt:
+    name: ufw
+    state: absent
+  when: ansible_os_family == "Debian"
 
-- name: Install firewalld
-    apt:
-      name: firewalld
-      state: present
-    when: ansible_os_family == "Debian"
+- name: Install firewalld (Debian)
+  apt:
+    name: firewalld
+    state: present
+  when: ansible_os_family == "Debian"
 
 - name: Install firewalld (RedHat/CentOS)
-    yum:
-      name: firewalld
-      state: present
-    when: ansible_os_family == "RedHat"
+  yum:
+    name: firewalld
+    state: present
+  when: ansible_os_family == "RedHat"
 
 - name: Ensure firewalld is running and enabled
-    service:
-      name: firewalld
-      state: started
-      enabled: yes
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
 
 - name: Create ztna_drop zone
-    firewalld:
-      zone: ztna_drop
-      state: present
-      permanent: yes
-      immediate: yes
+  firewalld:
+    zone: ztna_drop
+    state: present
+    permanent: yes
+    immediate: yes
 
 - name: Set default zone to ztna_drop
-    firewalld:
-      default_zone: ztna_drop
-      immediate: yes
+  firewalld:
+    default_zone: ztna_drop
+    immediate: yes
 
 - name: Allow SSH in ztna_drop zone
-    firewalld:
-      service: ssh
-      zone: ztna_drop
-      state: enabled
-      permanent: yes
-      immediate: yes
+  firewalld:
+    service: ssh
+    zone: ztna_drop
+    state: enabled
+    permanent: yes
+    immediate: yes
