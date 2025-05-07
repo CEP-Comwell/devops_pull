@@ -24,7 +24,7 @@
     - idle
     - idle-python3.11
     - iperf3
-    - ipscan
+#    - ipscan
     - ipset
     - ipxe-qemu
     - ipython3
@@ -47,10 +47,10 @@
     - ovmf
     - pipx
     - printer-driver-cups-pdf
-    - python2
+ #   - python2
     - python2.7
     - python2.7-minimal
-    - python2-minimal
+ #   - python2-minimal
     - python3.11-dev
     - python3.11-doc
     - python3.11-examples
