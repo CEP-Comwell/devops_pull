@@ -32,6 +32,7 @@
 - name: Set default zone to ztna_drop
   firewalld:
     default_zone: ztna_drop
+    state: enabled
 
 - name: Allow SSH in ztna_drop zone
   firewalld:
