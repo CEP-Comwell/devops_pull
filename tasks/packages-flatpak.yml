@@ -15,8 +15,25 @@
     - com.spotify.Client
     - org.mozilla.firefox
     - org.gimp.GIMP
+    - com.belmoussaoui.Authenticator
+    - com.bitwarden.desktop
+    - com.brave.Browser
+    - com.github.IsmaelMartinez.teams_for_linux
+    - com.github.PintaProject.Pinta
+    - com.github.xournalpp.xournalpp
+    - com.google.Chrome
+    - com.microsoft.Edge
+    - com.microsoft.EdgeDev
+    - com.visualstudio.code
+    - org.keepassxc.KeePassXC
+    - org.nmap.Zenmap
+    - uk.org.greenend.chiark.sgtatham.putty
   register: flatpak_install
   ignore_errors: yes
+
+- name: Initialize failed_flatpak_apps variable
+  set_fact:
+    failed_flatpak_apps: []
 
 - name: Collect failed Flatpak installations
   set_fact:
