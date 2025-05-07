@@ -174,7 +174,6 @@
       - ssh
       - tilix
       - tilix-common
-
     state: present
   register: package_install
   ignore_errors: yes
@@ -185,3 +184,4 @@
   with_items: "{{ package_install.results }}"
   when: item.failed and 'No package matching' not in item.msg
   failed_when: item.failed and 'No package matching' not in item.msg
+
