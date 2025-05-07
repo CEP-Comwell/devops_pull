@@ -2,8 +2,11 @@
   apt:
     name:
       - apache2-utils
+
       - appimagelauncher
+
       - aptkit
+
       - arch-test
       - arp-scan
       - attr
