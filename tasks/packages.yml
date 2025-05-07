@@ -6,7 +6,7 @@
     - apache2-utils
     - arp-scan
     - attr
-    - balena-etcher
+#    - balena-etcher
     - bridge-utils
     - cpu-checker
     - dnsmasq
