@@ -2,11 +2,17 @@
   apt:
     name:
       - apache2-utils
+
       - arp-scan
+
       - attr
+
       - balena-etcher
+
       - bridge-utils
+
       - cpu-checker
+
       - dnsmasq
       - extlinux
       - f2fs-tools
