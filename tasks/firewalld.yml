@@ -28,12 +28,10 @@
     zone: ztna_drop
     state: present
     permanent: yes
-    immediate: yes
 
 - name: Set default zone to ztna_drop
   firewalld:
     default_zone: ztna_drop
-    immediate: yes
 
 - name: Allow SSH in ztna_drop zone
   firewalld:
@@ -41,4 +39,3 @@
     zone: ztna_drop
     state: enabled
     permanent: yes
-    immediate: yes
