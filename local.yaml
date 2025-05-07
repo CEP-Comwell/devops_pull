@@ -1,9 +1,0 @@
-- hosts: localhost
-  connection: local
-  become: true
-
-  tasks:
-    - name: Install htop
-      ansible.builtin.yum:
-        name: htop
-        state: present
