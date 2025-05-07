@@ -21,7 +21,7 @@
       - idle
       - idle-python3.11
       - iperf3
-      - ipscan
+#      - ipscan
       - ipset
       - ipxe-qemu
       - ipython3
