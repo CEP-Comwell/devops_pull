@@ -12,6 +12,6 @@
        changed_when: False
    tasks:
      - import_tasks: tasks/users.yml
-#     - import_tasks: tasks/cron.yml
+     - import_tasks: tasks/cron.yml
 #     - import_tasks: tasks/packages.yml
      - import_tasks: tasks/packages-flatpak.yml
