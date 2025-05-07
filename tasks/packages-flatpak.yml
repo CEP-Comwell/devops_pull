@@ -1,32 +1,29 @@
 ---
+- name: Ensure Flatpak is installed
+  package:
+    name: flatpak
+    state: present
+
+- name: Add Flathub repository
+  command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  args:
+    creates: /var/lib/flatpak/repo/flathub
+
 - name: Install Flatpak applications
-  hosts: localhost
-  tasks:
-    - name: Ensure Flatpak is installed
-      package:
-        name: flatpak
-        state: present
+  command: flatpak install -y flathub "{{ item }}"
+  loop:
+    - com.spotify.Client
+    - org.mozilla.firefox
+    - org.gimp.GIMP
+  register: flatpak_install
+  ignore_errors: yes
 
-    - name: Add Flathub repository
-      command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-      args:
-        creates: /var/lib/flatpak/repo/flathub
+- name: Collect failed Flatpak installations
+  set_fact:
+    failed_flatpak_apps: "{{ failed_flatpak_apps | default([]) + [item.item] }}"
+  with_items: "{{ flatpak_install.results }}"
+  when: item.failed and 'error' in item.msg
 
-    - name: Install Flatpak applications
-      command: flatpak install -y flathub "{{ item }}"
-      loop:
-        - com.spotify.Client
-        - org.mozilla.firefox
-        - org.gimp.GIMP
-      register: flatpak_install
-      ignore_errors: yes
-
-    - name: Collect failed Flatpak installations
-      set_fact:
-        failed_flatpak_apps: "{{ failed_flatpak_apps | default([]) + [item.item] }}"
-      with_items: "{{ flatpak_install.results }}"
-      when: item.failed and 'error' in item.msg
-
-    - name: Output failed Flatpak installations
-      debug:
-        msg: "Failed Flatpak applications: {{ failed_flatpak_apps | join(', ') }}"
+- name: Output failed Flatpak installations
+  debug:
+    msg: "Failed Flatpak applications: {{ failed_flatpak_apps | join(', ') }}"
