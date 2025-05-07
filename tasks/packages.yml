@@ -2,17 +2,11 @@
   apt:
     name:
       - apache2-utils
-
       - arp-scan
-
       - attr
-
       - balena-etcher
-
       - bridge-utils
-
       - cpu-checker
-
       - dnsmasq
       - extlinux
       - f2fs-tools
@@ -180,3 +174,13 @@
       - ssh
       - tilix
       - tilix-common
+    state: present
+  register: package_install
+  ignore_errors: yes
+
+- name: Check for package installation failures
+  debug:
+    msg: "Package {{ item.item }} installation failed"
+  with_items: "{{ package_install.results }}"
+  when: item.failed and 'No package matching' not in item.msg
+  failed_when: item.failed and 'No package matching' not in item.msg
