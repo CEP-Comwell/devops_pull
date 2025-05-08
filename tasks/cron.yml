@@ -3,4 +3,4 @@
     user: ansible
     name: "ansible provision"
     minute: "*/10"
-     job: "sudo /usr/bin/ansible-pull -o -i devops_pull/hosts.ini -U https://github.com/CEP-Comwell/devops_pull.git >> ~/ansible-pull.log 2>&1"
+     job: "sudo /usr/bin/ansible-pull -o -i devops_pull/hosts.ini -U https://github.com/CEP-Comwell/devops_pull.git >> /dev/null"
