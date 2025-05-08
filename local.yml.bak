@@ -1,21 +1,26 @@
-
 ---
- - hosts: localhost
-   connection: local
-   gather_facts: true
-   become: true
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  become: true
 
-   vars:
-     ansible_os_family: Debian  # Set this to "RedHat" if using a RedHat-based system
+  vars:
+    ansible_os_family: "Debian"  # Set this to "RedHat" if using a RedHat-based system
 
-   pre_tasks:
-     - name: update repositories
-       apt:
-         update_cache: yes
-       changed_when: False
-   tasks:
-     - import_tasks: tasks/users.yml
-     - import_tasks: tasks/cron.yml
-     - import_tasks: tasks/firewalld.yml
-#     - import_tasks: tasks/packages.yml
-#     - import_tasks: tasks/packages-flatpak.yml
+  pre_tasks:
+    - name: update repositories
+      apt:
+        update_cache: yes
+      changed_when: False
+
+  tasks:
+    - import_tasks: tasks/users.yml
+    - import_tasks: tasks/cron.yml
+    - import_tasks: tasks/firewalld.yml
+
+
+  handlers:
+    - name: Restart Fail2Ban
+      service:
+        name: fail2ban
+        state: restarted

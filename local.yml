@@ -18,9 +18,8 @@
     - import_tasks: tasks/cron.yml
     - import_tasks: tasks/firewalld.yml
 
-
-  handlers:
-    - name: Restart Fail2Ban
-      service:
-        name: fail2ban
-        state: restarted
+  handlers:
+    - name: Restart Fail2Ban
+      service:
+        name: fail2ban
+        state: restarted
