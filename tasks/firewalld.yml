@@ -30,9 +30,7 @@
     permanent: yes
 
 - name: Set default zone to ztna_drop
-  firewalld:
-    default_zone: ztna_drop
-    state: enabled
+  command: firewall-cmd --set-default-zone=ztna_drop
 
 - name: Allow SSH in ztna_drop zone
   firewalld:
