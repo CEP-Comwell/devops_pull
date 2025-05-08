@@ -1,4 +1,3 @@
----
 - name: Ensure Flatpak is installed
   package:
     name: flatpak
@@ -12,7 +11,7 @@
 - name: Install Flatpak applications
   command: flatpak install -y flathub "{{ item }}"
   loop:
-    - com.spotify.Client
+    - com.discordapp.Discord
     - org.mozilla.firefox
     - org.gimp.GIMP
     - com.belmoussaoui.Authenticator
@@ -27,7 +26,6 @@
     - com.visualstudio.code
     - org.keepassxc.KeePassXC
     - org.nmap.Zenmap
-    - uk.org.greenend.chiark.sgtatham.putty
   register: flatpak_install
   ignore_errors: yes
 
@@ -44,3 +42,11 @@
 - name: Output failed Flatpak installations
   debug:
     msg: "Failed Flatpak applications: {{ failed_flatpak_apps | join(', ') }}"
+
+- name: Uninstall Flatpak applications
+  package:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - com.spotify.Client
+    - uk.org.greenend.chiark.sgtatham.putty
