@@ -29,8 +29,13 @@
     state: present
     permanent: yes
 
+- name: Verify ztna_drop zone exists
+  command: firewall-cmd --get-zones
+  register: firewalld_zones
+
 - name: Set default zone to ztna_drop
   command: firewall-cmd --set-default-zone=ztna_drop
+  when: "'ztna_drop' in firewalld_zones.stdout"
 
 - name: Allow SSH in ztna_drop zone
   firewalld:
