@@ -3,10 +3,15 @@
     name: flatpak
     state: present
 
-- name: Add Flathub repository
+- name: Verify Flathub repository is added
   command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   args:
     creates: /var/lib/flatpak/repo/flathub
+
+- name: Update Flatpak and repositories
+  command: flatpak update
+  register: flatpak_update
+  ignore_errors: yes
 
 - name: Install Flatpak applications
   command: flatpak install -y flathub "{{ item }}"
