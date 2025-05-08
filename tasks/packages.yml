@@ -6,7 +6,7 @@
     - apache2-utils
     - arp-scan
     - attr
-#    - balena-etcher
+    - balena-etcher
     - bridge-utils
     - cpu-checker
     - dnsmasq
@@ -24,7 +24,6 @@
     - idle
     - idle-python3.11
     - iperf3
-#    - ipscan
     - ipset
     - ipxe-qemu
     - ipython3
@@ -46,10 +45,8 @@
     - ovmf
     - pipx
     - printer-driver-cups-pdf
- #   - python2
     - python2.7
     - python2.7-minimal
- #   - python2-minimal
     - python3.11-dev
     - python3.11-doc
     - python3.11-examples
@@ -168,7 +165,6 @@
     - shim-unsigned:amd64
     - sleuthkit
     - software-properties-common
-    - sonnet-plugins:amd64
     - sphinx-rtd-theme-common
     - spice-client-glib-usb-acl-helper
     - sqlite3
@@ -184,8 +180,7 @@
     state: absent
   loop:
     - ncat
-    - another-package
-    - yet-another-package
+    - sonnet-plugins:amd64
 
 - name: Collect failed packages
   set_fact:
