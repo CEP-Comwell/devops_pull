@@ -76,6 +76,7 @@
     state: started
     enabled: yes
 
+# Handlers section should be at the same level as tasks
 handlers:
   - name: Restart Fail2Ban
     service:
