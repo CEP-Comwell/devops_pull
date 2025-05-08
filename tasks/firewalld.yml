@@ -43,6 +43,7 @@
     zone: ztna_drop
     state: enabled
     permanent: yes
+
 - name: Install Fail2Ban (Debian)
   apt:
     name: fail2ban
