@@ -35,7 +35,6 @@
     - mint-meta-codecs
     - mkdocs
     - msr-tools
-    - ncat
     - netdiscover
     - netpbm
     - nmap
@@ -178,6 +177,15 @@
     - tilix-common
   register: package_install
   ignore_errors: yes
+
+- name: Uninstall packages
+  apt:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - ncat
+    - another-package
+    - yet-another-package
 
 - name: Collect failed packages
   set_fact:
