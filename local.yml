@@ -6,7 +6,7 @@
    become: true
 
    vars:
-     ansible_os_family: "Debian"  # Set this to "RedHat" if using a RedHat-based system
+     ansible_os_family: Debian  # Set this to "RedHat" if using a RedHat-based system
 
    pre_tasks:
      - name: update repositories
