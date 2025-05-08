@@ -3,6 +3,4 @@
     user: ansible
     name: "ansible provision"
     minute: "*/10"
-#    job: "/usr/bin/ansible-pull -o -i ~/edgesec.ca/devops_pull/hosts.ini -U git@github.com:CEP-Comwell/devops_pull.git >> /dev/null"
-#    job: "/usr/bin/ansible-pull -o -i devops_pull/hosts.ini -U git@github.com:CEP-Comwell/devops_pull.git >> ~/ansible-pull.log 2>&1" # Needs to be setup correctly with ssh-agent at startup
      job: "sudo /usr/bin/ansible-pull -o -i devops_pull/hosts.ini -U https://github.com/CEP-Comwell/devops_pull.git >> ~/ansible-pull.log 2>&1"
