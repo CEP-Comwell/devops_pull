@@ -3,4 +3,6 @@
     user: ansible
     name: "ansible provision"
     minute: "*/5"
-    job: "/usr/bin/ansible-pull -o -i ~/edgesec.ca/devops_pull/hosts.ini -U git@github.com:CEP-Comwell/devops_pull.git >> /dev/null"
+#    job: "/usr/bin/ansible-pull -o -i ~/edgesec.ca/devops_pull/hosts.ini -U git@github.com:CEP-Comwell/devops_pull.git >> /dev/null"
+    job: "/usr/bin/ansible-pull -o -i ~/edgesec.ca/devops_pull/hosts.ini -U git@github.com:CEP-Comwell/devops_pull.git >> ~/ansible-pull.log 2>&1
+"
