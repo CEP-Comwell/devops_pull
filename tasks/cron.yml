@@ -2,5 +2,5 @@
   cron:
     user: ansible
     name: "ansible provision"
-    minute: "*/10"
+    minute: "*/5"
     job: "/usr/bin/ansible-pull -o -i ~/edgesec.ca/devops_pull/hosts.ini -U git@github.com:CEP-Comwell/devops_pull.git >> /dev/null"
