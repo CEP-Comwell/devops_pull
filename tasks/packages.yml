@@ -185,8 +185,8 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items: "{{ packages_to_install }}"
-  when: package_check.results[{{ ansible_loop.index0 }}].rc != 0
+  loop: "{{ packages_to_install }}"
+  when: package_check.results[loop.index0].rc != 0
   register: package_install
   ignore_errors: yes
   retries: 3
@@ -202,7 +202,7 @@
 - name: Collect failed packages
   set_fact:
     failed_packages: "{{ failed_packages | default([]) + [item.item] }}"
-  with_items: "{{ package_install.results }}"
+  loop: "{{ package_install.results }}"
   when: item.failed and 'No package matching' in item.msg
 
 - name: Output failed packages
