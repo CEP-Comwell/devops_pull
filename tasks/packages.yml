@@ -1,9 +1,9 @@
+# Create the 'tasks' directory if it doesn't exist
 import os
 
-# Create the 'tasks' directory if it doesn't exist
 os.makedirs('tasks', exist_ok=True)
 
-# Define the content for the 'packages.yml' file
+# Define the content of the packages.yml file
 packages_yml_content = """---
 - name: Update packages_to_install variable
   set_fact:
@@ -217,9 +217,9 @@ packages_yml_content = """---
     msg: "Failed packages: {{ failed_packages | join(', ') }}"
 """
 
-# Write the content to the 'packages.yml' file
+# Write the content to the packages.yml file
 with open('tasks/packages.yml', 'w') as file:
     file.write(packages_yml_content)
 
-print("The 'tasks/packages.yml' file has been successfully created.")
+print("The 'tasks/packages.yml' file has been created successfully.")
 
