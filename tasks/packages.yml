@@ -1,3 +1,10 @@
+import os
+
+# Create the 'tasks' directory if it doesn't exist
+os.makedirs('tasks', exist_ok=True)
+
+# Define the content for 'packages.yml'
+packages_yml_content = """
 - name: Update packages_to_install variable
   set_fact:
     packages_to_install: 
@@ -183,10 +190,10 @@
 
 - name: Install missing packages
   apt:
-    name: "{{ item }}"
+    name: "{{ item.0 }}"
     state: present
-  loop: "{{ packages_to_install }}"
-  when: package_check.results[loop.index0].rc != 0
+  loop: "{{ query('zip', packages_to_install, package_check.results) }}"
+  when: item.1.rc != 0
   register: package_install
   ignore_errors: yes
   retries: 3
@@ -201,10 +208,18 @@
 
 - name: Collect failed packages
   set_fact:
-    failed_packages: "{{ failed_packages | default([]) + [item.item] }}"
+    failed_packages: "{{ failed_packages | default([]) + [item.item.0] }}"
   loop: "{{ package_install.results }}"
   when: item.failed and 'No package matching' in item.msg
 
 - name: Output failed packages
   debug:
     msg: "Failed packages: {{ failed_packages | join(', ') }}"
+"""
+
+# Write the content to 'tasks/packages.yml'
+with open('tasks/packages.yml', 'w') as file:
+    file.write(packages_yml_content)
+
+print("The 'tasks/packages.yml' file has been generated successfully.")
+
