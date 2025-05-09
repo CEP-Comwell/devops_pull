@@ -1,4 +1,4 @@
-# Define the content of the packages.yml file
+# Define the content of the packages.yml file with valid YAML syntax
 packages_yml_content = """---
 - name: Update packages_to_install variable
   set_fact:
