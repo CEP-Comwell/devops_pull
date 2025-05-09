@@ -58,11 +58,11 @@
     permanent: yes
   loop: "{{ allowed_services }}"
 
-# Set default policy to deny in ztna_drop zone
-- name: Set default policy to deny in ztna_drop zone
+# Set default target to DROP in ztna_drop zone
+- name: Set default target to DROP in ztna_drop zone
   firewalld:
     zone: ztna_drop
-    policy: deny
+    target: DROP
     state: enabled
     permanent: yes
 
