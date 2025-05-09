@@ -9,8 +9,6 @@
     allowed_services:
       - ssh
       - https
-    packages_to_install: []
-    packages_to_uninstall: []
 
   pre_tasks:
     - name: update repositories
@@ -19,11 +17,11 @@
       changed_when: False
 
   tasks:
-#    - import_tasks: tasks/users.yml
-#    - import_tasks: tasks/cron.yml
-#    - import_tasks: tasks/firewalld.yml
+    - import_tasks: tasks/users.yml
+    - import_tasks: tasks/cron.yml
+    - import_tasks: tasks/firewalld.yml
     - import_tasks: tasks/packages.yml
-#    - import_tasks: tasks/packages-flatpak.yml
+    - import_tasks: tasks/packages-flatpak.yml
 
   handlers:
     - name: Restart Fail2Ban
