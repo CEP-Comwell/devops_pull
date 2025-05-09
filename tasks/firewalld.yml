@@ -5,117 +5,118 @@ vars:
     - ssh
     - https
 
-# Uninstall UFW if the system is Debian-based
-- name: Uninstall UFW
-  apt:
-    name: ufw
-    state: absent
-  when: ansible_os_family == "Debian"
+tasks:
+  # Uninstall UFW if the system is Debian-based
+  - name: Uninstall UFW
+    apt:
+      name: ufw
+      state: absent
+    when: ansible_os_family == "Debian"
 
-# Install firewalld on Debian-based systems
-- name: Install firewalld (Debian)
-  apt:
-    name: firewalld
-    state: present
-  when: ansible_os_family == "Debian"
+  # Install firewalld on Debian-based systems
+  - name: Install firewalld (Debian)
+    apt:
+      name: firewalld
+      state: present
+    when: ansible_os_family == "Debian"
 
-# Install firewalld on RedHat/CentOS-based systems
-- name: Install firewalld (RedHat/CentOS)
-  yum:
-    name: firewalld
-    state: present
-  when: ansible_os_family == "RedHat"
+  # Install firewalld on RedHat/CentOS-based systems
+  - name: Install firewalld (RedHat/CentOS)
+    yum:
+      name: firewalld
+      state: present
+    when: ansible_os_family == "RedHat"
 
-# Ensure firewalld is running and enabled on boot
-- name: Ensure firewalld is running and enabled
-  service:
-    name: firewalld
-    state: started
-    enabled: yes
+  # Ensure firewalld is running and enabled on boot
+  - name: Ensure firewalld is running and enabled
+    service:
+      name: firewalld
+      state: started
+      enabled: yes
 
-# Check if ztna_drop zone exists
-- name: Check if ztna_drop zone exists
-  firewalld:
-    zone: ztna_drop
-    state: query
-  register: ztna_drop_zone
-  failed_when: false
-  changed_when: false
+  # Check if ztna_drop zone exists
+  - name: Check if ztna_drop zone exists
+    firewalld:
+      zone: ztna_drop
+      state: query
+    register: ztna_drop_zone
+    failed_when: false
+    changed_when: false
 
-# Create ztna_drop zone if it does not exist
-- name: Create ztna_drop zone
-  firewalld:
-    zone: ztna_drop
-    state: present
-    permanent: yes
-  when: ztna_drop_zone.failed
+  # Create ztna_drop zone if it does not exist
+  - name: Create ztna_drop zone
+    firewalld:
+      zone: ztna_drop
+      state: present
+      permanent: yes
+    when: ztna_drop_zone.failed
 
-# Set the default zone to ztna_drop if it exists
-- name: Set default zone to ztna_drop
-  command: firewall-cmd --set-default-zone=ztna_drop
-  when: not ztna_drop_zone.failed
+  # Set the default zone to ztna_drop if it exists
+  - name: Set default zone to ztna_drop
+    command: firewall-cmd --set-default-zone=ztna_drop
+    when: not ztna_drop_zone.failed
 
-# Allow specified services in the ztna_drop zone
-- name: Allow specified services in ztna_drop zone
-  firewalld:
-    service: "{{ item }}"
-    zone: ztna_drop
-    state: enabled
-    permanent: yes
-  loop: "{{ allowed_services }}"
+  # Allow specified services in the ztna_drop zone
+  - name: Allow specified services in ztna_drop zone
+    firewalld:
+      service: "{{ item }}"
+      zone: ztna_drop
+      state: enabled
+      permanent: yes
+    loop: "{{ allowed_services }}"
 
-# Set default policy to deny in ztna_drop zone
-- name: Set default policy to deny in ztna_drop zone
-  firewalld:
-    zone: ztna_drop
-    policy: deny
-    state: enabled
-    permanent: yes
+  # Set default policy to deny in ztna_drop zone
+  - name: Set default policy to deny in ztna_drop zone
+    firewalld:
+      zone: ztna_drop
+      policy: deny
+      state: enabled
+      permanent: yes
 
-# Remove all other services from ztna_drop zone
-- name: Remove all other services from ztna_drop zone
-  firewalld:
-    zone: ztna_drop
-    service: "{{ item }}"
-    state: disabled
-    permanent: yes
-  loop: "{{ firewalld_zones.stdout_lines | difference(allowed_services) }}"
-  when: not ztna_drop_zone.failed
+  # Remove all other services from ztna_drop zone
+  - name: Remove all other services from ztna_drop zone
+    firewalld:
+      zone: ztna_drop
+      service: "{{ item }}"
+      state: disabled
+      permanent: yes
+    loop: "{{ firewalld_zones.stdout_lines | difference(allowed_services) }}"
+    when: not ztna_drop_zone.failed
 
-# Install Fail2Ban on Debian-based systems
-- name: Install Fail2Ban (Debian)
-  apt:
-    name: fail2ban
-    state: present
-  when: ansible_os_family == "Debian"
+  # Install Fail2Ban on Debian-based systems
+  - name: Install Fail2Ban (Debian)
+    apt:
+      name: fail2ban
+      state: present
+    when: ansible_os_family == "Debian"
 
-# Install Fail2Ban on RedHat/CentOS-based systems
-- name: Install Fail2Ban (RedHat/CentOS)
-  yum:
-    name: fail2ban
-    state: present
-  when: ansible_os_family == "RedHat"
+  # Install Fail2Ban on RedHat/CentOS-based systems
+  - name: Install Fail2Ban (RedHat/CentOS)
+    yum:
+      name: fail2ban
+      state: present
+    when: ansible_os_family == "RedHat"
 
-# Configure Fail2Ban jail for SSH protection
-- name: Configure Fail2Ban jail for SSH
-  copy:
-    dest: /etc/fail2ban/jail.local
-    content: |
-      [sshd]
-      enabled = true
-      port = ssh
-      filter = sshd
-      logpath = /var/log/auth.log
-      maxretry = 3
-      bantime = 900
-  notify:
-    - Restart Fail2Ban
+  # Configure Fail2Ban jail for SSH protection
+  - name: Configure Fail2Ban jail for SSH
+    copy:
+      dest: /etc/fail2ban/jail.local
+      content: |
+        [sshd]
+        enabled = true
+        port = ssh
+        filter = sshd
+        logpath = /var/log/auth.log
+        maxretry = 3
+        bantime = 900
+    notify:
+      - Restart Fail2Ban
 
-# Ensure Fail2Ban is running and enabled on boot
-- name: Ensure Fail2Ban is running and enabled
-  service:
-    name: fail2ban
-    state: started
-    enabled: yes
-  retries: 3
-  delay: 5
+  # Ensure Fail2Ban is running and enabled on boot
+  - name: Ensure Fail2Ban is running and enabled
+    service:
+      name: fail2ban
+      state: started
+      enabled: yes
+    retries: 3
+    delay: 5
