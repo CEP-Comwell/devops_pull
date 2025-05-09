@@ -1,12 +1,35 @@
-- name: create ansible user
+- name: Check if ansible user exists
+  command: getent passwd ansible
+  register: ansible_user_exists
+  failed_when: ansible_user_exists.rc == 2
+  changed_when: false
+
+- name: Create ansible user if not exists
   user:
     name: ansible
     system: yes
+    shell: /bin/bash
+  when: ansible_user_exists.rc == 1
 
-- name: copy sudoers_ansible
+- name: Check attributes of sudoers_ansible before copy
+  stat:
+    path: /etc/sudoers.d/ansible
+  register: sudoers_ansible_before
+
+- name: Copy sudoers_ansible
   copy:
     src: files/sudoers_ansible
     dest: /etc/sudoers.d/ansible
     owner: root
     group: root
     mode: 0440
+
+- name: Check attributes of sudoers_ansible after copy
+  stat:
+    path: /etc/sudoers.d/ansible
+  register: sudoers_ansible_after
+
+- name: Verify if sudoers_ansible has changed
+  debug:
+    msg: "sudoers_ansible file has changed"
+  when: sudoers_ansible_before.stat.md5 != sudoers_ansible_after.stat.md5
