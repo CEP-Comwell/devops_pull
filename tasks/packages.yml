@@ -1,8 +1,7 @@
-- name: Check if packages are installed
-  shell: dpkg-query -W -f='${Status}' {{ item }} | grep -q "install ok installed"
-  register: package_check
-  ignore_errors: yes
-  changed_when: false
+- name: Install packages
+  apt:
+    name: "{{ item }}"
+    state: present
   loop:
     - apache2-utils
     - attr
@@ -170,18 +169,8 @@
     - ssh
     - tilix
     - tilix-common
-
-- name: Install missing packages
-  apt:
-    name: "{{ item }}"
-    state: present
-  loop: "{{ query('ansible.builtin.sequence', '0', 'item') }}"
-  when: package_check.results[item].rc != 0
   register: package_install
   ignore_errors: yes
-  retries: 3
-  delay: 5
-  until: package_install is succeeded
 
 - name: Uninstall packages
   apt:
