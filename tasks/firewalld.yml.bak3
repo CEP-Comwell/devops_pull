@@ -64,11 +64,6 @@
     state: enabled
     permanent: yes
 
-# Get list of all services in ztna_drop zone
-- name: Get list of all services in ztna_drop zone
-  command: firewall-cmd --zone=ztna_drop --list-services
-  register: ztna_drop_services
-
 # Remove all other services from ztna_drop zone
 - name: Remove all other services from ztna_drop zone
   firewalld:
@@ -76,7 +71,7 @@
     service: "{{ item }}"
     state: disabled
     permanent: yes
-  loop: "{{ ztna_drop_services.stdout.split() | difference(allowed_services) }}"
+  loop: "{{ firewalld_zones.stdout_lines | difference(allowed_services) }}"
   when: "'ztna_drop' in firewalld_zones.stdout"
 
 # Install Fail2Ban on Debian-based systems
