@@ -1,4 +1,4 @@
-# Define the content of the packages.yml file with correct YAML indentation
+# Define the content of the packages.yml file with correct YAML syntax and indentation
 packages_yml_content = """---
 - name: Update packages_to_install variable
   set_fact:
