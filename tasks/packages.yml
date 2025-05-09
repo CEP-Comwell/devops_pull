@@ -175,8 +175,8 @@
   apt:
     name: "{{ item }}"
     state: present
-  loop: "{{ query('ansible.builtin.sequence', 'start=0 end=' + (package_check.results | length | string)) }}"
-  when: package_check.results[loop.index].rc != 0
+  loop: "{{ packages_to_install }}"
+  when: package_check.results[item.index].rc != 0
   register: package_install
   ignore_errors: yes
   retries: 3
