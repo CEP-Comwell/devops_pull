@@ -79,21 +79,19 @@
   loop: "{{ ztna_drop_services.stdout.split() | difference(allowed_services) }}"
   when: "'ztna_drop' in firewalld_zones.stdout"
 
-# Install Fail2Ban on Debian-based systems
-- name: Install Fail2Ban (Debian)
-  apt:
-    name: fail2ban
-    state: present
-  when: ansible_os_family == "Debian"
+# Restart firewalld to apply permanent rules to runtime
+- name: Restart firewalld
+  service:
+    name: firewalld
+    state: restarted
 
-# Install Fail2Ban on RedHat/CentOS-based systems
-- name: Install Fail2Ban (RedHat/CentOS)
-  yum:
-    name: fail2ban
-    state: present
-  when: ansible_os_family == "RedHat"
+# Check current Fail2Ban configuration
+- name: Check current Fail2Ban configuration
+  command: cat /etc/fail2ban/jail.local
+  register: current_fail2ban_config
+  changed_when: false
 
-# Configure Fail2Ban jail for SSH protection
+# Configure Fail2Ban jail for SSH protection only if configuration has changed
 - name: Configure Fail2Ban jail for SSH
   copy:
     dest: /etc/fail2ban/jail.local
@@ -105,6 +103,7 @@
       logpath = /var/log/auth.log
       maxretry = 3
       bantime = 900
+  when: current_fail2ban_config.stdout != "[sshd]\nenabled = true\nport = ssh\nfilter = sshd\nlogpath = /var/log/auth.log\nmaxretry = 3\nbantime = 900"
   notify:
     - Restart Fail2Ban
 
