@@ -175,7 +175,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  loop: "{{ query('ansible.builtin.sequence', 'start=0 end=' + (package_check.results | length | string)) }}"
+  loop: "{{ query('ansible.builtin.sequence', '0', 'item') }}"
   when: package_check.results[item].rc != 0
   register: package_install
   ignore_errors: yes
@@ -193,7 +193,7 @@
 
 - name: Collect failed packages
   set_fact:
-    failed_packages: "{{ failed_packages | default([]) + [item.item] }}"
+    failed_packages: "{{ failed_packages | default([]) + [item] }}"
   with_items: "{{ package_install.results }}"
   when: item.failed and 'No package matching' in item.msg
 
