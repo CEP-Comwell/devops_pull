@@ -29,10 +29,8 @@
 
 # Check if ztna_drop zone exists
 - name: Check if ztna_drop zone exists
-  firewalld:
-    zone: ztna_drop
-    state: query
-  register: ztna_drop_zone
+  command: firewall-cmd --get-zones
+  register: firewalld_zones
   failed_when: false
   changed_when: false
 
@@ -42,12 +40,12 @@
     zone: ztna_drop
     state: present
     permanent: yes
-  when: ztna_drop_zone.failed
+  when: "'ztna_drop' not in firewalld_zones.stdout"
 
 # Set the default zone to ztna_drop if it exists
 - name: Set default zone to ztna_drop
   command: firewall-cmd --set-default-zone=ztna_drop
-  when: not ztna_drop_zone.failed
+  when: "'ztna_drop' in firewalld_zones.stdout"
 
 # Allow specified services in the ztna_drop zone
 - name: Allow specified services in ztna_drop zone
@@ -74,7 +72,7 @@
     state: disabled
     permanent: yes
   loop: "{{ firewalld_zones.stdout_lines | difference(allowed_services) }}"
-  when: not ztna_drop_zone.failed
+  when: "'ztna_drop' in firewalld_zones.stdout"
 
 # Install Fail2Ban on Debian-based systems
 - name: Install Fail2Ban (Debian)
