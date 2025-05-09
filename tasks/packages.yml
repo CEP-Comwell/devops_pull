@@ -4,7 +4,6 @@
     state: present
   loop:
     - apache2-utils
-    - arp-scan
     - attr
     - balena-etcher
     - bridge-utils
@@ -166,6 +165,7 @@
     - sphinx-rtd-theme-common
     - spice-client-glib-usb-acl-helper
     - ncat
+    - s3fs
     - ssh
     - tilix
     - tilix-common
@@ -177,8 +177,9 @@
     name: "{{ item }}"
     state: absent
   loop:
-    - s3fs
     - sqlite3
+    - arp-scan
+
 - name: Collect failed packages
   set_fact:
     failed_packages: "{{ failed_packages | default([]) + [item] }}"
