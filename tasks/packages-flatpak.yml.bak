@@ -1,22 +1,18 @@
-# Ensure Flatpak is installed on the system.
 - name: Ensure Flatpak is installed
   package:
     name: flatpak
     state: present
 
-# Add the Flathub repository if it doesn't already exist.
 - name: Verify Flathub repository is added
   command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   args:
     creates: /var/lib/flatpak/repo/flathub
 
-# Update Flatpak and its repositories. Register the result and ignore errors.
 - name: Update Flatpak and repositories
   command: flatpak update
   register: flatpak_update
   ignore_errors: yes
 
-# Install a list of Flatpak applications. Register the result and ignore errors.
 - name: Install Flatpak applications
   command: flatpak install -y flathub "{{ item }}"
   loop:
@@ -38,45 +34,24 @@
   register: flatpak_install
   ignore_errors: yes
 
-# Initialize the variable to store any failed installations.
 - name: Initialize failed_flatpak_apps variable
   set_fact:
     failed_flatpak_apps: []
 
-# Collect any failed installations and add them to the failed_flatpak_apps variable.
 - name: Collect failed Flatpak installations
   set_fact:
     failed_flatpak_apps: "{{ failed_flatpak_apps | default([]) + [item.item] }}"
   with_items: "{{ flatpak_install.results }}"
   when: item.failed and 'error' in item.msg
 
-# Output the list of failed installations for debugging purposes.
 - name: Output failed Flatpak installations
   debug:
     msg: "Failed Flatpak applications: {{ failed_flatpak_apps | join(', ') }}"
 
-# Uninstall specified Flatpak applications using the command module to ensure complete removal.
 - name: Uninstall Flatpak applications
-  command: flatpak uninstall --delete-data "{{ item }}"
+  package:
+    name: "{{ item }}"
+    state: absent
   loop:
     - com.spotify.Client
     - uk.org.greenend.chiark.sgtatham.putty
-  register: flatpak_uninstall
-  ignore_errors: yes
-
-# Initialize the variable to store any failed uninstalls.
-- name: Initialize failed_flatpak_uninstalls variable
-  set_fact:
-    failed_flatpak_uninstalls: []
-
-# Collect any failed uninstalls and add them to the failed_flatpak_uninstalls variable.
-- name: Collect failed Flatpak uninstalls
-  set_fact:
-    failed_flatpak_uninstalls: "{{ failed_flatpak_uninstalls | default([]) + [item.item] }}"
-  with_items: "{{ flatpak_uninstall.results }}"
-  when: item.failed and 'error' in item.msg
-
-# Output the list of failed uninstalls for debugging purposes.
-- name: Output failed Flatpak uninstalls
-  debug:
-    msg: "Failed Flatpak uninstalls: {{ failed_flatpak_uninstalls | join(', ') }}"

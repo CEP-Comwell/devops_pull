@@ -18,7 +18,7 @@
     - import_tasks: tasks/cron.yml
 #    - import_tasks: tasks/firewalld.yml
     - import_tasks: tasks/packages.yml
-#    - import_tasks: tasks/packages-flatpak.yml
+    - import_tasks: tasks/packages-flatpak.yml
 
   handlers:
     - name: Restart Fail2Ban
