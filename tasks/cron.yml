@@ -2,5 +2,5 @@
   cron:
     user: ansible
     name: "ansible provision"
-    minute: "*/10"
+    minute: "*/15"
     job: "sudo /usr/bin/ansible-pull -o -i /home/ansible/devops_pull/hosts.ini -U https://github.com/CEP-Comwell/devops_pull.git >> /home/ansible/ansible-pull.log 2>&1"
