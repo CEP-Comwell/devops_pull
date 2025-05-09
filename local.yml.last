@@ -9,6 +9,8 @@
     allowed_services:
       - ssh
       - https
+    packages_to_install: []
+    packages_to_uninstall: []
 
   pre_tasks:
     - name: update repositories
