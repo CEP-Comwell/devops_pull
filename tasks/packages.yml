@@ -186,7 +186,7 @@
     name: "{{ item }}"
     state: present
   loop: "{{ packages_to_install }}"
-  when: package_check.results[item.index].rc != 0
+  when: package_check.results[loop.index0].rc != 0
   register: package_install
   ignore_errors: yes
   retries: 3
