@@ -31,6 +31,7 @@
     - org.gimp.GIMP
     - com.belmoussaoui.Authenticator
     - com.bitwarden.desktop
+    - com.brave.Browser
     - com.github.IsmaelMartinez.teams_for_linux
     - com.github.PintaProject.Pinta
     - com.github.xournalpp.xournalpp
@@ -72,7 +73,6 @@
 - name: Uninstall Flatpak applications
   command: flatpak uninstall -y --delete-data "{{ item }}"
   loop:
-    - com.brave.Browser
     - com.spotify.Client
     - uk.org.greenend.chiark.sgtatham.putty
   register: flatpak_uninstall

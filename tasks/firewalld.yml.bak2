@@ -1,0 +1,77 @@
+---
+- name: Uninstall UFW
+  apt:
+    name: ufw
+    state: absent
+  when: ansible_os_family == "Debian"
+
+- name: Install firewalld (Debian)
+  apt:
+    name: firewalld
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install firewalld (RedHat/CentOS)
+  yum:
+    name: firewalld
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Ensure firewalld is running and enabled
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: Create ztna_drop zone
+  firewalld:
+    zone: ztna_drop
+    state: present
+    permanent: yes
+
+- name: Verify ztna_drop zone exists
+  command: firewall-cmd --get-zones
+  register: firewalld_zones
+
+- name: Set default zone to ztna_drop
+  command: firewall-cmd --set-default-zone=ztna_drop
+  when: "'ztna_drop' in firewalld_zones.stdout"
+
+- name: Allow SSH in ztna_drop zone
+  firewalld:
+    service: ssh
+    zone: ztna_drop
+    state: enabled
+    permanent: yes
+
+- name: Install Fail2Ban (Debian)
+  apt:
+    name: fail2ban
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install Fail2Ban (RedHat/CentOS)
+  yum:
+    name: fail2ban
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Configure Fail2Ban jail for SSH
+  copy:
+    dest: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      enabled = true
+      port = ssh
+      filter = sshd
+      logpath = /var/log/auth.log
+      maxretry = 3
+      bantime = 900
+  notify:
+    - Restart Fail2Ban
+
+- name: Ensure Fail2Ban is running and enabled
+  service:
+    name: fail2ban
+    state: started
+    enabled: yes
