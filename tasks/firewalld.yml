@@ -1,4 +1,10 @@
 ---
+# Define allowed services at the top level
+vars:
+  allowed_services:
+    - ssh
+    - https
+
 # Uninstall UFW if the system is Debian-based
 - name: Uninstall UFW
   apt:
@@ -48,11 +54,6 @@
 - name: Set default zone to ztna_drop
   command: firewall-cmd --set-default-zone=ztna_drop
   when: not ztna_drop_zone.failed
-
-# List of allowed services
-allowed_services:
-  - ssh
-  - https
 
 # Allow specified services in the ztna_drop zone
 - name: Allow specified services in ztna_drop zone
