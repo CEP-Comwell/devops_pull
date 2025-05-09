@@ -176,7 +176,7 @@
     name: "{{ item }}"
     state: present
   loop: "{{ query('ansible.builtin.sequence', 'start=0 end=' + (package_check.results | length | string)) }}"
-  when: package_check.results[loop.index0].rc != 0
+  when: package_check.results[loop.index].rc != 0
   register: package_install
   ignore_errors: yes
   retries: 3
@@ -190,6 +190,7 @@
   loop:
     - sqlite3
     - arp-scan
+
 - name: Collect failed packages
   set_fact:
     failed_packages: "{{ failed_packages | default([]) + [item.item] }}"
