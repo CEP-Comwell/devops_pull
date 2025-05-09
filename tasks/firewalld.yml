@@ -1,10 +1,4 @@
 ---
-# Define allowed services at the top level
-vars:
-  allowed_services:
-    - ssh
-    - https
-
 tasks:
   # Uninstall UFW if the system is Debian-based
   - name: Uninstall UFW
