@@ -16,16 +16,11 @@
   register: flatpak_update
   ignore_errors: yes
 
-# Install D-Bus dependencies.
-- name: Install D-Bus dependencies
-  package:
-    name: dbus-x11
-    state: present
-
 # Install a list of Flatpak applications. Register the result and ignore errors.
 - name: Install Flatpak applications
   command: flatpak install -y flathub "{{ item }}"
   loop:
+    - com.spotify.Client
     - com.discordapp.Discord
     - org.mozilla.firefox
     - org.gimp.GIMP
@@ -60,20 +55,10 @@
   debug:
     msg: "Failed Flatpak applications: {{ failed_flatpak_apps | join(', ') }}"
 
-# Set environment variables for DISPLAY and DBUS_SESSION_BUS_ADDRESS.
-- name: Set environment variables
-  shell: |
-    export DISPLAY=:0
-    export $(dbus-launch)
-  environment:
-    DISPLAY: ":0"
-    DBUS_SESSION_BUS_ADDRESS: "{{ lookup('env', 'DBUS_SESSION_BUS_ADDRESS') }}"
-
 # Uninstall specified Flatpak applications using the command module to ensure complete removal.
 - name: Uninstall Flatpak applications
   command: flatpak uninstall --delete-data "{{ item }}"
   loop:
-    - com.spotify.Client
     - com.brave.Browser
     - uk.org.greenend.chiark.sgtatham.putty
   register: flatpak_uninstall
