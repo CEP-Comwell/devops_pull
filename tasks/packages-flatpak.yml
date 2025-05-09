@@ -20,12 +20,12 @@
 - name: Install Flatpak applications
   command: flatpak install -y flathub "{{ item }}"
   loop:
+    - com.spotify.Client
     - com.discordapp.Discord
     - org.mozilla.firefox
     - org.gimp.GIMP
     - com.belmoussaoui.Authenticator
     - com.bitwarden.desktop
-    - com.brave.Browser
     - com.github.IsmaelMartinez.teams_for_linux
     - com.github.PintaProject.Pinta
     - com.github.xournalpp.xournalpp
@@ -59,7 +59,7 @@
 - name: Uninstall Flatpak applications
   command: flatpak uninstall --delete-data "{{ item }}"
   loop:
-    - com.spotify.Client
+    - com.brave.Browser
     - uk.org.greenend.chiark.sgtatham.putty
   register: flatpak_uninstall
   ignore_errors: yes
