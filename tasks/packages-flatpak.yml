@@ -54,7 +54,6 @@
     failed_flatpak_apps: "{{ failed_flatpak_apps | default([]) + [item.item] }}"
   with_items: "{{ flatpak_install.results }}"
   when: item.failed and 'error' in item.msg
-
 # Output the list of failed installations for debugging purposes.
 - name: Output failed Flatpak installations
   debug:
@@ -71,10 +70,10 @@
 
 # Uninstall specified Flatpak applications using the command module to ensure complete removal.
 - name: Uninstall Flatpak applications
-  command: flatpak uninstall --delete-data "{{ item }}"
+  command: flatpak uninstall -y --delete-data "{{ item }}"
   loop:
-    - com.spotify.Client
     - com.brave.Browser
+    - com.spotify.Client
     - uk.org.greenend.chiark.sgtatham.putty
   register: flatpak_uninstall
   ignore_errors: yes
