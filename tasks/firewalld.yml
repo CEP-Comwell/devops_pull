@@ -1,4 +1,11 @@
 ---
+# Variables for flexibility
+allowed_services:
+  - ssh
+  - http
+  - https
+firewalld_zone: ztna_drop
+
 # Uninstall UFW if the system is Debian-based
 - name: Uninstall UFW
   apt:
@@ -26,76 +33,72 @@
     name: firewalld
     state: started
     enabled: yes
+  retries: 3
+  delay: 5
 
-# Check if ztna_drop zone exists
-- name: Check if ztna_drop zone exists
-  command: firewall-cmd --get-zones
-  register: firewalld_zones
-  failed_when: false
-  changed_when: false
-
-# Create ztna_drop zone if it does not exist
-- name: Create ztna_drop zone
+# Ensure ztna_drop zone exists
+- name: Ensure {{ firewalld_zone }} zone exists
   firewalld:
-    zone: ztna_drop
+    zone: "{{ firewalld_zone }}"
     state: present
     permanent: yes
-  when: "'ztna_drop' not in firewalld_zones.stdout"
+  notify: Restart Firewalld
 
-# Set the default zone to ztna_drop if it exists
-- name: Set default zone to ztna_drop
-  command: firewall-cmd --set-default-zone=ztna_drop
-  when: "'ztna_drop' in firewalld_zones.stdout"
+# Set the default zone to ztna_drop
+- name: Set default zone to {{ firewalld_zone }}
+  firewalld:
+    default_zone: "{{ firewalld_zone }}"
+  notify: Restart Firewalld
 
 # Allow specified services in the ztna_drop zone
-- name: Allow specified services in ztna_drop zone
+- name: Allow specified services in {{ firewalld_zone }} zone
   firewalld:
     service: "{{ item }}"
-    zone: ztna_drop
+    zone: "{{ firewalld_zone }}"
     state: enabled
     permanent: yes
   loop: "{{ allowed_services }}"
+  notify: Restart Firewalld
 
 # Set default target to DROP in ztna_drop zone
-- name: Set default target to DROP in ztna_drop zone
+- name: Set default target to DROP in {{ firewalld_zone }} zone
   firewalld:
-    zone: ztna_drop
+    zone: "{{ firewalld_zone }}"
     target: DROP
     state: enabled
     permanent: yes
+  notify: Restart Firewalld
 
 # Get list of all services in ztna_drop zone
-- name: Get list of all services in ztna_drop zone
-  command: firewall-cmd --zone=ztna_drop --list-services
+- name: Get list of all services in {{ firewalld_zone }} zone
+  command: firewall-cmd --zone={{ firewalld_zone }} --list-services
   register: ztna_drop_services
+  changed_when: false
 
 # Remove all other services from ztna_drop zone
-- name: Remove all other services from ztna_drop zone
+- name: Remove all other services from {{ firewalld_zone }} zone
   firewalld:
-    zone: ztna_drop
+    zone: "{{ firewalld_zone }}"
     service: "{{ item }}"
     state: disabled
     permanent: yes
   loop: "{{ ztna_drop_services.stdout.split() | difference(allowed_services) }}"
-  when: "'ztna_drop' in firewalld_zones.stdout"
+  when: ztna_drop_services.stdout is defined
+  notify: Restart Firewalld
 
 # Restart firewalld to apply permanent rules to runtime
 - name: Restart firewalld
   service:
     name: firewalld
     state: restarted
+  listen: Restart Firewalld
 
-# Check current Fail2Ban configuration
-- name: Check current Fail2Ban configuration
-  command: cat /etc/fail2ban/jail.local
-  register: current_fail2ban_config
-  changed_when: false
-
-# Configure Fail2Ban jail for SSH protection only if configuration has changed
+# Configure Fail2Ban jail for SSH protection
 - name: Configure Fail2Ban jail for SSH
-  copy:
-    dest: /etc/fail2ban/jail.local
-    content: |
+  lineinfile:
+    path: /etc/fail2ban/jail.local
+    regexp: "^\\[sshd\\]"
+    line: |
       [sshd]
       enabled = true
       port = ssh
@@ -103,9 +106,7 @@
       logpath = /var/log/auth.log
       maxretry = 3
       bantime = 900
-  when: current_fail2ban_config.stdout != "[sshd]\nenabled = true\nport = ssh\nfilter = sshd\nlogpath = /var/log/auth.log\nmaxretry = 3\nbantime = 900"
-  notify:
-    - Restart Fail2Ban
+  notify: Restart Fail2Ban
 
 # Ensure Fail2Ban is running and enabled on boot
 - name: Ensure Fail2Ban is running and enabled
@@ -115,3 +116,10 @@
     enabled: yes
   retries: 3
   delay: 5
+
+# Restart Fail2Ban service
+- name: Restart Fail2Ban
+  service:
+    name: fail2ban
+    state: restarted
+  listen: Restart Fail2Ban
