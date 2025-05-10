@@ -9,7 +9,8 @@
     allowed_services:
       - ssh
       - https
-
+    firewalld_zone: ztna_drop
+  
   pre_tasks:
     - name: update repositories
       apt:
