@@ -36,12 +36,18 @@ firewalld_zone: ztna_drop
   retries: 3
   delay: 5
 
-# Ensure ztna_drop zone exists
+# Check if the ztna_drop zone exists
+- name: Check if {{ firewalld_zone }} zone exists
+  command: firewall-cmd --get-zones
+  register: firewalld_zones
+  changed_when: false
+
 - name: Ensure {{ firewalld_zone }} zone exists
   firewalld:
     zone: "{{ firewalld_zone }}"
     state: present
     permanent: yes
+  when: firewalld_zone not in firewalld_zones.stdout.split()
   notify: Restart Firewalld
 
 # Set the default zone to ztna_drop
@@ -50,15 +56,39 @@ firewalld_zone: ztna_drop
     default_zone: "{{ firewalld_zone }}"
   notify: Restart Firewalld
 
-# Allow specified services in the ztna_drop zone
-- name: Allow specified services in {{ firewalld_zone }} zone
+# Get the current list of services in the ztna_drop zone
+- name: Get list of all services in {{ firewalld_zone }} zone
+  command: firewall-cmd --zone={{ firewalld_zone }} --list-services
+  register: ztna_drop_services
+  changed_when: false
+
+# Enable allowed services in the ztna_drop zone
+- name: Enable allowed services in {{ firewalld_zone }} zone
   firewalld:
-    service: "{{ item }}"
     zone: "{{ firewalld_zone }}"
+    service: "{{ item }}"
     state: enabled
     permanent: yes
-  loop: "{{ allowed_services }}"
+  loop: "{{ allowed_services | difference(ztna_drop_services.stdout.split()) }}"
+  when: ztna_drop_services.stdout is defined
   notify: Restart Firewalld
+
+# Disable unauthorized services in the ztna_drop zone
+- name: Disable unauthorized services in {{ firewalld_zone }} zone
+  firewalld:
+    zone: "{{ firewalld_zone }}"
+    service: "{{ item }}"
+    state: disabled
+    permanent: yes
+  loop: "{{ ztna_drop_services.stdout.split() | difference(allowed_services) }}"
+  when: ztna_drop_services.stdout is defined
+  notify: Restart Firewalld
+
+# Check the current target of the ztna_drop zone
+- name: Get current target of {{ firewalld_zone }} zone
+  command: firewall-cmd --zone={{ firewalld_zone }} --get-target
+  register: ztna_drop_target
+  changed_when: false
 
 # Set default target to DROP in ztna_drop zone
 - name: Set default target to DROP in {{ firewalld_zone }} zone
@@ -67,23 +97,7 @@ firewalld_zone: ztna_drop
     target: DROP
     state: enabled
     permanent: yes
-  notify: Restart Firewalld
-
-# Get list of all services in ztna_drop zone
-- name: Get list of all services in {{ firewalld_zone }} zone
-  command: firewall-cmd --zone={{ firewalld_zone }} --list-services
-  register: ztna_drop_services
-  changed_when: false
-
-# Remove all other services from ztna_drop zone
-- name: Remove all other services from {{ firewalld_zone }} zone
-  firewalld:
-    zone: "{{ firewalld_zone }}"
-    service: "{{ item }}"
-    state: disabled
-    permanent: yes
-  loop: "{{ ztna_drop_services.stdout.split() | difference(allowed_services) }}"
-  when: ztna_drop_services.stdout is defined
+  when: ztna_drop_target.stdout != "DROP"
   notify: Restart Firewalld
 
 # Restart firewalld to apply permanent rules to runtime
