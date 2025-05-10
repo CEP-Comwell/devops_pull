@@ -4,13 +4,6 @@
   gather_facts: false
   become: true
 
-  vars:
-    ansible_os_family: "Debian"  # Set this to "RedHat" if using a RedHat-based system
-    allowed_services:
-      - ssh
-      - https
-    firewalld_zone: ztna_drop
-  
   pre_tasks:
     - name: update repositories
       apt:
