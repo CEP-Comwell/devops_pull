@@ -1,4 +1,5 @@
 ---
+# This is the main Ansible playbook
 - hosts: localhost
   connection: local
   gather_facts: false
