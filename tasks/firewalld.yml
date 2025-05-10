@@ -1,11 +1,12 @@
 ---
 # Variables for flexibility
-vars:
-  allowed_services:
-    - ssh
-    - http
-    - https
-  firewalld_zone: ztna_drop
+- name: Set variables for firewalld
+  vars:
+    allowed_services:
+      - ssh
+      - http
+      - https
+    firewalld_zone: ztna_drop
 
 # Uninstall UFW if the system is Debian-based
 - name: Uninstall UFW
