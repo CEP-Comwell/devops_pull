@@ -11,4 +11,4 @@ sudo apt install git
 # Create a project called edgesec.ca 
 mkdir ~/edgesec.ca
 cd edgesec.ca
-git clone 
+git clone https://github.com/CEP-Comwell/devops_pull.git
