@@ -13,4 +13,6 @@ sudo apt install ansible -y
 mkdir ~/edgesec.ca
 cd edgesec.ca
 git clone https://github.com/CEP-Comwell/devops_pull.git
+ansible-pull local.yml -i hosts.ini
+
 
