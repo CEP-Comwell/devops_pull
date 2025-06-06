@@ -1,6 +1,32 @@
 ---
 # This is a task file imported by local.yml
 
+# Add Microsoft GPG key
+- name: Download Microsoft GPG key
+  ansible.builtin.get_url:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    dest: /etc/apt/trusted.gpg.d/microsoft.asc
+    mode: '0644'
+
+# Add VS Code repository
+- name: Add VS Code repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64] https://packages.microsoft.com/repos/code stable main"
+    filename: vscode
+    state: present
+
+# Update apt cache
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+# Install VS Code
+- name: Install Visual Studio Code
+  ansible.builtin.apt:
+    name: code
+    state: present
+
 # Install packages
 - name: Install packages
   apt:
