@@ -1,5 +1,8 @@
+# Generate the complete Ansible task file named 'packages.yml'
+
+packages_yml_content = """
 ---
-# This is a task file imported by local.yml
+# tasks/packages.yml
 
 # Install packages
 - name: Install packages
@@ -74,7 +77,6 @@
     - python3-examples
     - python3-executing
     - python3-feedparser
-    # - python3-firewall  # Installed automatically with firewalld
     - python3-fonttools
     - python3-fs
     - python3-full
@@ -107,13 +109,11 @@
     - python3-matplotlib-inline
     - python3-mergedeep
     - python3-more-itertools
-    # - python3-mpmath  # Installed automatically with python3-sympy
     - python3-multiprocess
     - python3-nautilus
     - python3-netdisco
     - python3-nftables
     - python3-nltk
-    # - python3-numpy  # Installed automatically with python3-matplotlib and python3-scipy
     - python3-oauthlib
     - python3-parso
     - python3-pickleshare
@@ -157,7 +157,6 @@
     - python3-webcolors
     - python3-wheel
     - python3-zeroconf
-    - python3-zipp
     - python-matplotlib-data
     - screen
     - scrub
@@ -184,14 +183,27 @@
     - sqlite3
     - arp-scan
 
+# Initialize failed_packages as an empty list
+- name: Initialize failed_packages
+  set_fact:
+    failed_packages: []
+
 # Collect failed packages
 - name: Collect failed packages
   set_fact:
-    failed_packages: "{{ failed_packages | default([]) + [item.item] }}"
-  with_items: "{{ package_install.results }}"
-  when: item.failed and 'No package matching' in item.msg
+    failed_packages: "{{ failed_packages + [item.item] }}"
+  loop: "{{ package_install.results }}"
+  when: item.failed is defined and item.failed
 
 # Output failed packages
 - name: Output failed packages
   debug:
     msg: "Failed packages: {{ failed_packages | join(', ') }}"
+"""
+
+# Save the content to 'packages.yml'
+with open('packages.yml', 'w') as file:
+    file.write(packages_yml_content)
+
+print("The 'packages.yml' file has been generated successfully.")
+
