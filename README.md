@@ -9,10 +9,7 @@ sudo apt upgrade
 sudo apt install git
 sudo apt install ansible -y
 
-# Create a project called edgesec.ca 
-mkdir ~/edgesec.ca
-cd edgesec.ca
-git clone https://github.com/CEP-Comwell/devops_pull.git
-ansible-pull local.yml -i hosts.ini
-
-
+# Create a temporary project called devops_pull
+mkdir ~/devops_pull
+cd ~/devops_pull
+sudo ansible-pull -i hosts.ini -U https://github.com/CEP-Comwell/devops_pull.git
