@@ -93,13 +93,20 @@
     name: firewalld
     state: restarted
 
-# Check current Fail2Ban configuration
-- name: Check current Fail2Ban configuration
+# Check if Fail2Ban jail.local exists
+- name: Check if Fail2Ban jail.local exists
+  stat:
+    path: /etc/fail2ban/jail.local
+  register: jail_local_stat
+
+# Read current Fail2Ban configuration if it exists
+- name: Read current Fail2Ban configuration if it exists
   command: cat /etc/fail2ban/jail.local
   register: current_fail2ban_config
   changed_when: false
+  when: jail_local_stat.stat.exists
 
-# Configure Fail2Ban jail for SSH protection only if configuration has changed
+# Configure Fail2Ban jail for SSH
 - name: Configure Fail2Ban jail for SSH
   copy:
     dest: /etc/fail2ban/jail.local
@@ -111,7 +118,8 @@
       logpath = /var/log/auth.log
       maxretry = 3
       bantime = 900
-  when: current_fail2ban_config.stdout != "[sshd]\nenabled = true\nport = ssh\nfilter = sshd\nlogpath = /var/log/auth.log\nmaxretry = 3\nbantime = 900"
+  when: jail_local_stat.stat.exists == false or
+        current_fail2ban_config.stdout != "[sshd]\nenabled = true\nport = ssh\nfilter = sshd\nlogpath = /var/log/auth.log\nmaxretry = 3\nbantime = 900"
   notify:
     - Restart Fail2Ban
 
