@@ -1,4 +1,3 @@
-# Create the content for the packages.yml file
 packages_yml_content = """---
 # This is a task file imported by local.yml
 
@@ -75,7 +74,6 @@ packages_yml_content = """---
     - python3-examples
     - python3-executing
     - python3-feedparser
-    # - python3-firewall  # Installed automatically with firewalld
     - python3-fonttools
     - python3-fs
     - python3-full
@@ -108,13 +106,11 @@ packages_yml_content = """---
     - python3-matplotlib-inline
     - python3-mergedeep
     - python3-more-itertools
-    # - python3-mpmath  # Installed automatically with python3-sympy
     - python3-multiprocess
     - python3-nautilus
     - python3-netdisco
     - python3-nftables
     - python3-nltk
-    # - python3-numpy  # Installed automatically with python3-matplotlib and python3-scipy
     - python3-oauthlib
     - python3-parso
     - python3-pickleshare
@@ -198,8 +194,9 @@ packages_yml_content = """---
     msg: "Failed packages: {{ failed_packages | join(', ') }}"
 """
 
-# Write the content to the packages.yml file
-with open('packages.yml', 'w') as file:
+# Write the content to the packages.yml file with strict UTF-8 encoding, Unix line endings, and no BOM
+with open('packages.yml', 'w', encoding='utf-8', newline='\n') as file:
     file.write(packages_yml_content)
 
 print("The packages.yml file has been created successfully.")
+
