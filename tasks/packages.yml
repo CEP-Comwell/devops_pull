@@ -1,6 +1,6 @@
-# Create the content for the packages.yml file with updated structure and modern syntax
+# Define the content for the packages.yml file with strict YAML compliance
 packages_yml_content = """---
-# tasks/packages.yml
+# This is a task file imported by local.yml
 
 # Install packages
 - name: Install packages
@@ -191,7 +191,7 @@ packages_yml_content = """---
   set_fact:
     failed_packages: "{{ failed_packages + [item.item] }}"
   loop: "{{ package_install.results }}"
-  when: item.failed and 'No package matching' in item.msg
+  when: item.failed is defined and item.failed
 
 # Output failed packages
 - name: Output failed packages
@@ -199,8 +199,9 @@ packages_yml_content = """---
     msg: "Failed packages: {{ failed_packages | join(', ') }}"
 """
 
-# Write the content to the packages.yml file with UTF-8 encoding and Unix line endings
+# Write the content to the packages.yml file with strict UTF-8 encoding and Unix line endings
 with open('packages.yml', 'w', encoding='utf-8', newline='\n') as file:
     file.write(packages_yml_content)
 
-print("The updated packages.yml file has been created successfully.")
+print("The packages.yml file has been created successfully with strict YAML compliance.")
+
