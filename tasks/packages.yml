@@ -180,10 +180,15 @@
     - sqlite3
     - arp-scan
 
+# Initialize failed_packages
+- name: Initialize failed_packages
+  set_fact:
+    failed_packages: []
+
 # Collect failed packages
 - name: Collect failed packages
   set_fact:
-    failed_packages: "{{ failed_packages | default([]) + [item.item] }}"
+    failed_packages: "{{ failed_packages + [item.item] }}"
   with_items: "{{ package_install.results }}"
   when: item.failed and 'No package matching' in item.msg
 
