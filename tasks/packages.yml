@@ -1,6 +1,6 @@
-# Define the content for the packages.yml file with strict YAML compliance
+# Create the content for the packages.yml file with correct indentation for use as an imported subtask
 packages_yml_content = """---
-# This is a task file imported by local.yml
+# tasks/packages.yml
 
 # Install packages
 - name: Install packages
@@ -199,9 +199,9 @@ packages_yml_content = """---
     msg: "Failed packages: {{ failed_packages | join(', ') }}"
 """
 
-# Write the content to the packages.yml file with strict UTF-8 encoding and Unix line endings
+# Write the content to the packages.yml file with UTF-8 encoding and Unix line endings
 with open('packages.yml', 'w', encoding='utf-8', newline='\n') as file:
     file.write(packages_yml_content)
 
-print("The packages.yml file has been created successfully with strict YAML compliance.")
+print("The packages.yml file has been created successfully.")
 
