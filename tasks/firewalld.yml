@@ -1,5 +1,6 @@
 ---
-# This is a task file imported by local.yml
+# tasks/firewalld.yml
+
 # Uninstall UFW if the system is Debian-based
 - name: Uninstall UFW
   apt:
@@ -43,7 +44,12 @@
     permanent: yes
   when: "'ztna_drop' not in firewalld_zones.stdout"
 
-# Set the default zone to ztna_drop if it exists
+# Reload firewalld after creating ztna_drop zone
+- name: Reload firewalld after creating ztna_drop zone
+  command: firewall-cmd --reload
+  when: "'ztna_drop' not in firewalld_zones.stdout"
+
+# Set the default zone to ztna_drop
 - name: Set default zone to ztna_drop
   command: firewall-cmd --set-default-zone=ztna_drop
   when: "'ztna_drop' in firewalld_zones.stdout"
@@ -69,6 +75,7 @@
 - name: Get list of all services in ztna_drop zone
   command: firewall-cmd --zone=ztna_drop --list-services
   register: ztna_drop_services
+  when: "'ztna_drop' in firewalld_zones.stdout"
 
 # Remove all other services from ztna_drop zone
 - name: Remove all other services from ztna_drop zone
