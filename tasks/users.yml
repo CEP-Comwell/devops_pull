@@ -13,12 +13,7 @@
     shell: /bin/bash
   when: ansible_user_check.rc != 0
 
-- name: Check if sudoers file for 'ansible' exists
-  ansible.builtin.stat:
-    path: /etc/sudoers.d/ansible
-  register: sudoers_file_before
-
-- name: Copy sudoers file for 'ansible'
+- name: Ensure sudoers file for 'ansible' is present
   ansible.builtin.copy:
     src: files/sudoers_ansible
     dest: /etc/sudoers.d/ansible
@@ -26,13 +21,9 @@
     group: root
     mode: '0440'
   notify: Validate sudoers file
-
-- name: Check if sudoers file for 'ansible' changed
-  ansible.builtin.stat:
-    path: /etc/sudoers.d/ansible
-  register: sudoers_file_after
+  register: copy_result
 
 - name: Report if sudoers file has changed
   ansible.builtin.debug:
     msg: "sudoers_ansible file has changed"
-  when: sudoers_file_before.stat.checksum != sudoers_file_after.stat.checksum
+  when: copy_result.changed
