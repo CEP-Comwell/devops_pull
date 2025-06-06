@@ -9,7 +9,6 @@
   loop:
     - apache2-utils
     - attr
-    - balena-etcher
     - bridge-utils
     - cpu-checker
     - dnsmasq
@@ -49,8 +48,6 @@
     - ovmf
     - pipx
     - printer-driver-cups-pdf
-    - python2.7
-    - python2.7-minimal
     - python3.11-dev
     - python3.11-doc
     - python3.11-examples
