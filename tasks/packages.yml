@@ -1,5 +1,3 @@
-# Generate the complete Ansible task file named 'packages.yml'
-
 packages_yml_content = """
 ---
 # tasks/packages.yml
@@ -201,9 +199,8 @@ packages_yml_content = """
     msg: "Failed packages: {{ failed_packages | join(', ') }}"
 """
 
-# Save the content to 'packages.yml'
+# Write the content to packages.yml file
 with open('packages.yml', 'w') as file:
     file.write(packages_yml_content)
 
-print("The 'packages.yml' file has been generated successfully.")
-
+print("The packages.yml file has been created successfully.")
