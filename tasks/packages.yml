@@ -1,6 +1,5 @@
----
 # Create the content for the packages.yml file with correct indentation for use as an imported subtask
-packages_yml_content = """
+packages_yml_content = """---
 # tasks/packages.yml
 
 # Install packages
