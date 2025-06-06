@@ -1,35 +1,38 @@
-# This is a task file imported by local.yml
-- name: Check if ansible user exists
+# tasks/users.yml
+
+- name: Check if 'ansible' user exists
   command: getent passwd ansible
-  register: ansible_user_exists
-  failed_when: ansible_user_exists.rc == 2
+  register: ansible_user_check
+  failed_when: false
   changed_when: false
 
-- name: Create ansible user if not exists
-  user:
+- name: Create 'ansible' user if it does not exist
+  ansible.builtin.user:
     name: ansible
     system: yes
     shell: /bin/bash
-  when: ansible_user_exists.rc == 1
+  when: ansible_user_check.rc != 0
 
-- name: Check attributes of sudoers_ansible before copy
-  stat:
+- name: Check if sudoers file for 'ansible' exists
+  ansible.builtin.stat:
     path: /etc/sudoers.d/ansible
-  register: sudoers_ansible_before
-- name: Copy sudoers_ansible
-  copy:
+  register: sudoers_file_before
+
+- name: Copy sudoers file for 'ansible'
+  ansible.builtin.copy:
     src: files/sudoers_ansible
     dest: /etc/sudoers.d/ansible
     owner: root
     group: root
-    mode: 0440
+    mode: '0440'
+  notify: Validate sudoers file
 
-- name: Check attributes of sudoers_ansible after copy
-  stat:
+- name: Check if sudoers file for 'ansible' changed
+  ansible.builtin.stat:
     path: /etc/sudoers.d/ansible
-  register: sudoers_ansible_after
+  register: sudoers_file_after
 
-- name: Verify if sudoers_ansible has changed
-  debug:
+- name: Report if sudoers file has changed
+  ansible.builtin.debug:
     msg: "sudoers_ansible file has changed"
-  when: sudoers_ansible_before.stat.checksum != sudoers_ansible_after.stat.checksum
+  when: sudoers_file_before.stat.checksum != sudoers_file_after.stat.checksum
