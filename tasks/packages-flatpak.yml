@@ -76,6 +76,7 @@
   loop:
     - com.spotify.Client
     - uk.org.greenend.chiark.sgtatham.putty
+    - com.visualstudio.code
   register: flatpak_uninstall
   ignore_errors: yes
 
