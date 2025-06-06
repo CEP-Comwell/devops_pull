@@ -39,7 +39,7 @@
     - com.google.Chrome
     - com.microsoft.Edge
     - com.microsoft.EdgeDev
-    - com.visualstudio.code
+    # - com.visualstudio.code - This should be installed using the official package
     - org.keepassxc.KeePassXC
     - org.nmap.Zenmap
   register: flatpak_install
