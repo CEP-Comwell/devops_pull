@@ -15,6 +15,7 @@
     - dnsmasq
     - extlinux
     - f2fs-tools
+    - fail2ban
     - fastboot
     - ffmpeg
     - firefox-esr
