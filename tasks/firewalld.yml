@@ -93,6 +93,19 @@
     name: firewalld
     state: restarted
 
+# Install Fail2Ban
+- name: Install Fail2Ban
+  package:
+    name: fail2ban
+    state: present
+
+# Ensure /etc/fail2ban directory exists
+- name: Ensure /etc/fail2ban directory exists
+  file:
+    path: /etc/fail2ban
+    state: directory
+    mode: '0755'
+
 # Check if Fail2Ban jail.local exists
 - name: Check if Fail2Ban jail.local exists
   stat:
