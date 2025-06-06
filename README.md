@@ -1,6 +1,4 @@
-# devops_pull
-
-Ansible-pull script for DevOps endpoints
+# devops_pull Ansible-pull script for DevOps endpoints
 
 # Run apt update && apt upgrade
 
