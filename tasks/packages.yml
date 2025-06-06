@@ -1,5 +1,6 @@
----
-# This is a task file imported by local.yml
+# Create the content for the packages.yml file with updated structure and modern syntax
+packages_yml_content = """---
+# tasks/packages.yml
 
 # Install packages
 - name: Install packages
@@ -180,14 +181,26 @@
     - sqlite3
     - arp-scan
 
+# Initialize failed_packages
+- name: Initialize failed_packages
+  set_fact:
+    failed_packages: []
+
 # Collect failed packages
 - name: Collect failed packages
   set_fact:
-    failed_packages: "{{ failed_packages | default([]) + [item.item] }}"
-  with_items: "{{ package_install.results }}"
+    failed_packages: "{{ failed_packages + [item.item] }}"
+  loop: "{{ package_install.results }}"
   when: item.failed and 'No package matching' in item.msg
 
 # Output failed packages
 - name: Output failed packages
   debug:
     msg: "Failed packages: {{ failed_packages | join(', ') }}"
+"""
+
+# Write the content to the packages.yml file with UTF-8 encoding and Unix line endings
+with open('packages.yml', 'w', encoding='utf-8', newline='\n') as file:
+    file.write(packages_yml_content)
+
+print("The updated packages.yml file has been created successfully.")
