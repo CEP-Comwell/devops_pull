@@ -14,7 +14,6 @@
     - dnsmasq
     - extlinux
     - f2fs-tools
-    - fail2ban
     - fastboot
     - ffmpeg
     - firefox-esr
@@ -74,7 +73,6 @@
     - python3-examples
     - python3-executing
     - python3-feedparser
-    # - python3-firewall  # Installed automatically with firewalld
     - python3-fonttools
     - python3-fs
     - python3-full
@@ -107,13 +105,11 @@
     - python3-matplotlib-inline
     - python3-mergedeep
     - python3-more-itertools
-    # - python3-mpmath  # Installed automatically with python3-sympy
     - python3-multiprocess
     - python3-nautilus
     - python3-netdisco
     - python3-nftables
     - python3-nltk
-    # - python3-numpy  # Installed automatically with python3-matplotlib and python3-scipy
     - python3-oauthlib
     - python3-parso
     - python3-pickleshare
