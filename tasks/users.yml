@@ -11,6 +11,12 @@
     path: /etc/sudoers.d/ansible
   register: sudoers_file
 
+- name: Get checksum of the source sudoers file
+  ansible.builtin.stat:
+    path: files/sudoers_ansible
+    checksum: yes
+  register: source_sudoers_file
+
 - name: Ensure sudoers file for 'ansible' is present
   ansible.builtin.copy:
     src: files/sudoers_ansible
@@ -21,7 +27,7 @@
     force: no
   notify: Validate sudoers file
   register: copy_result
-  when: not sudoers_file.stat.exists or sudoers_file.stat.checksum != ansible.builtin.file_checksum('files/sudoers_ansible')
+  when: not sudoers_file.stat.exists or sudoers_file.stat.checksum != source_sudoers_file.stat.checksum
 
 - name: Ensure correct permissions for sudoers file
   ansible.builtin.file:
