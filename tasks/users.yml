@@ -1,17 +1,10 @@
 # tasks/users.yml
 
-- name: Check if 'ansible' user exists
-  command: getent passwd ansible
-  register: ansible_user_check
-  failed_when: false
-  changed_when: false
-
-- name: Create 'ansible' user if it does not exist
+- name: Ensure 'ansible' user exists
   ansible.builtin.user:
     name: ansible
     system: yes
     shell: /bin/bash
-  when: ansible_user_check.rc != 0
 
 - name: Ensure sudoers file for 'ansible' is present
   ansible.builtin.copy:
