@@ -1,0 +1,4 @@
+---
+- name: Validate sudoers file
+  ansible.builtin.command:
+    cmd: visudo -cf /etc/sudoers.d/ansible
