@@ -1,18 +1,18 @@
 # tasks/users.yml
+# This is a task file imported by local.yml
+# It manages user accounts and sudoers configuration
 
-- name: Ensure 'ansible' user exists
-  ansible.builtin.user:
-    name: ansible
-    system: yes
-    shell: /bin/bash
+- name: Write sudoers file for 'ansible'
+  ansible.builtin.copy:
+    content: "ansible ALL=(ALL) NOPASSWD:ALL"
+    dest: /etc/sudoers.d/ansible
+    owner: root
+    group: root
+    mode: '0440'
 
-- name: Overwrite sudoers file for 'ansible' and validate
-  ansible.builtin.shell: |
-    echo "ansible ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ansible
-    chmod 0440 /etc/sudoers.d/ansible
-    chown root:root /etc/sudoers.d/ansible
-    # visudo -cf /etc/sudoers.d/ansible
-
-- name: Report that sudoers file was overwritten
-  ansible.builtin.debug:
-    msg: "sudoers_ansible file was overwritten"
+- name: Set permissions for sudoers file
+  ansible.builtin.file:
+    path: /etc/sudoers.d/ansible
+    owner: root
+    group: root
+    mode: '0440'
