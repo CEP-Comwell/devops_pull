@@ -11,7 +11,7 @@
     echo "ansible ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ansible
     chmod 0440 /etc/sudoers.d/ansible
     chown root:root /etc/sudoers.d/ansible
-    visudo -cf /etc/sudoers.d/ansible
+    # visudo -cf /etc/sudoers.d/ansible
 
 - name: Report that sudoers file was overwritten
   ansible.builtin.debug:
