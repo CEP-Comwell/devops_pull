@@ -6,22 +6,14 @@
     system: yes
     shell: /bin/bash
 
-- name: Overwrite sudoers file for 'ansible'
-  ansible.builtin.copy:
-    src: files/sudoers_ansible
+- name: Overwrite sudoers file for 'ansible' using template
+  ansible.builtin.template:
+    src: templates/sudoers_ansible.j2
     dest: /etc/sudoers.d/ansible
     owner: root
     group: root
     mode: '0440'
-    force: yes
   notify: Validate sudoers file
-
-- name: Ensure correct permissions for sudoers file
-  ansible.builtin.file:
-    path: /etc/sudoers.d/ansible
-    owner: root
-    group: root
-    mode: '0440'
 
 - name: Report that sudoers file was overwritten
   ansible.builtin.debug:
