@@ -17,6 +17,9 @@
         update_cache: yes
       changed_when: False
 
+  roles:
+    - vscode
+
   tasks:
     - import_tasks: tasks/users.yml
     - import_tasks: tasks/packages.yml
