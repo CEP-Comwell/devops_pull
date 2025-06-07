@@ -33,5 +33,3 @@
         name: fail2ban
         state: restarted
 
-    - name: Validate sudoers file
-      command: visudo -cf /etc/sudoers.d/ansible
