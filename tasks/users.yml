@@ -14,7 +14,7 @@
 - name: Get checksum of the source sudoers file
   ansible.builtin.stat:
     path: files/sudoers_ansible
-    checksum: yes
+    checksum_algorithm: sha256
   register: source_sudoers_file
 
 - name: Ensure sudoers file for 'ansible' is present
