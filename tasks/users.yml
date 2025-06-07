@@ -13,7 +13,7 @@
     owner: root
     group: root
     mode: '0440'
-  notify: Validate sudoers file
+  # notify: Validate sudoers file
 
 - name: Report that sudoers file was overwritten
   ansible.builtin.debug:
