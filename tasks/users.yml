@@ -6,28 +6,15 @@
     system: yes
     shell: /bin/bash
 
-- name: Check if sudoers file for 'ansible' exists
-  ansible.builtin.stat:
-    path: /etc/sudoers.d/ansible
-  register: sudoers_file
-
-- name: Get checksum of the source sudoers file
-  ansible.builtin.stat:
-    path: files/sudoers_ansible
-    checksum_algorithm: sha256
-  register: source_sudoers_file
-
-- name: Ensure sudoers file for 'ansible' is present
+- name: Overwrite sudoers file for 'ansible'
   ansible.builtin.copy:
     src: files/sudoers_ansible
     dest: /etc/sudoers.d/ansible
     owner: root
     group: root
     mode: '0440'
-    force: no
+    force: yes
   notify: Validate sudoers file
-  register: copy_result
-  when: not sudoers_file.stat.exists or sudoers_file.stat.checksum != source_sudoers_file.stat.checksum
 
 - name: Ensure correct permissions for sudoers file
   ansible.builtin.file:
@@ -36,7 +23,6 @@
     group: root
     mode: '0440'
 
-- name: Report if sudoers file has changed
+- name: Report that sudoers file was overwritten
   ansible.builtin.debug:
-    msg: "sudoers_ansible file has changed"
-  when: copy_result.changed
+    msg: "sudoers_ansible file was overwritten"
