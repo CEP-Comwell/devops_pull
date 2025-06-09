@@ -20,6 +20,11 @@
     state: present
     update_cache: yes
 
+# Ensure the apt cache is updated
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
 # Install Visual Studio Code
 - name: Install Visual Studio Code
   ansible.builtin.apt:

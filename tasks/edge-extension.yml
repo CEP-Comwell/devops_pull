@@ -1,0 +1,20 @@
+- name: Ensure Edge policy directory exists
+  file:
+    path: /etc/opt/edge/policies/managed
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Install Bitwarden extension for Edge via policy
+  copy:
+    dest: /etc/opt/edge/policies/managed/bitwarden_policy.json
+    content: |
+      {
+        "ExtensionInstallForcelist": [
+          "nngceckbapebfimnlniiiahkandclblb;https://edge.microsoft.com/extensionwebstorebase/v1/crx"
+        ]
+      }
+    owner: root
+    group: root
+    mode: '0644'
