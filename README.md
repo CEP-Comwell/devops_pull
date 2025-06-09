@@ -1,16 +1,14 @@
 # devops_pull Ansible-pull script for DevOps endpoints
 
-# Run apt update && apt upgrade
+# Run apt update
 
-sudo apt update
+sudo apt-get update
 
-sudo apt upgrade
+# Install pre-requisites: ansible, git, and python3
 
-# Install git and ansible
+sudo apt-get install -y ansible git
 
-sudo apt install git
-
-sudo apt install ansible -y
+sudo apt-get install -y python3
 
 # Create a temporary project called devops_pull
 
