@@ -5,7 +5,7 @@
     state: directory
     mode: '0755'
 
-- name: Download Microsoft GPG key
+- name: Download Microsoft GPG key (ASCII)
   ansible.builtin.get_url:
     url: https://packages.microsoft.com/keys/microsoft.asc
     dest: /etc/apt/keyrings/microsoft.asc
@@ -16,6 +16,11 @@
     cmd: gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg /etc/apt/keyrings/microsoft.asc
   args:
     creates: /etc/apt/keyrings/microsoft.gpg
+
+- name: Set permissions on the binary GPG key
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/microsoft.gpg
+    mode: '0644'
 
 - name: Add Visual Studio Code repository
   ansible.builtin.apt_repository:
