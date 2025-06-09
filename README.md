@@ -42,6 +42,9 @@ cd devops_pull
 The `deploy.sh` script automates the setup and execution of `ansible-pull`. Follow these steps:
 
 1. Download the `deploy.sh` script or create it in your environment.
+   ```bash
+   wget https://raw.githubusercontent.com/CEP-Comwell/devops_pull/refs/heads/main/deploy.sh
+   ```
 2. Make the script executable:
    ```bash
    chmod +x deploy.sh
