@@ -28,15 +28,12 @@
     state: present
     update_cache: yes
 
-<<<<<<< HEAD
 # Ensure the apt cache is updated
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: yes
 
 # Install Visual Studio Code
-=======
->>>>>>> refs/remotes/origin/main
 - name: Install Visual Studio Code
   ansible.builtin.apt:
     name: code
