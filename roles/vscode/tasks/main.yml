@@ -1,14 +1,22 @@
 ---
-# Add the Microsoft GPG key
+# Ensure the keyring directory exists
+- name: Create keyring directory
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+# Add the Microsoft GPG key to the keyring
 - name: Add Microsoft GPG key
-  ansible.builtin.apt_key:
+  ansible.builtin.get_url:
     url: https://packages.microsoft.com/keys/microsoft.asc
-    state: present
+    dest: /etc/apt/keyrings/microsoft.gpg
+    mode: '0644'
 
 # Add the Visual Studio Code repository
 - name: Add Visual Studio Code repository
   ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64] https://packages.microsoft.com/repos/code stable main"
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
     state: present
     update_cache: yes
 
