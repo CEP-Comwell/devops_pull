@@ -2,6 +2,14 @@
 # This is a task file imported by local.yml
 # It manages user accounts and sudoers configuration
 
+# tasks/users.yml
+
+- name: Ensure 'ansible' user exists
+  ansible.builtin.user:
+    name: ansible
+    system: yes
+    shell: /bin/bash
+
 - name: Write sudoers file for 'ansible'
   ansible.builtin.copy:
     content: "ansible ALL=(ALL) NOPASSWD:ALL"
