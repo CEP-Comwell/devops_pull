@@ -36,8 +36,7 @@ If you want to manually clone the repository, run:
 ```bash
 git clone https://github.com/CEP-Comwell/devops_pull.git
 cd devops_pull
-
----
+```
 
 ### 2. Run the Deployment Script
 The `deploy.sh` script automates the setup and execution of `ansible-pull`. Follow these steps:
