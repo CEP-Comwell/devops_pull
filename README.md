@@ -1,7 +1,7 @@
 # devops_pull
 
 An Ansible-based automation project for managing DevOps endpoints. This repository contains playbooks and tasks to configure and maintain systems efficiently.
-
+#
 ## Overview
 
 The `devops_pull` project uses `ansible-pull` to apply configurations to endpoints. The main playbook, `local.yml`, is designed to:
